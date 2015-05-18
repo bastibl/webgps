@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>..:: GPS Web GUI::..</title>
+    <meta charset="utf-8" />
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+
+    <!-- CSS -->
+    <style>
+      body {
+        background-color: #111111;
+        color: #eeeeee;
+      }
+      .leaflet-popup-content {
+        color: black;
+      }
+    </style>
+
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+  </head>
+
+  <body>
+
+    <div id="map" style="width: 100%; height: 700px"></div>
+
+    <script src="leaflet/leaflet.js"></script>
+    <script>
+
+      var map = L.map('map').setView([51.110, 9.482], 13);
+
+      L.tileLayer('map/{z}/{x}/{y}.jpg', {
+        maxZoom: 13,
+      }).addTo(map);
+
+      var gpsEvents = new EventSource('/updates');
+      gpsEvents.addEventListener("update", function(event) {
+        var gps = JSON.parse(event.data);
+        L.circle([gps.lat, gps.lon], 10, {
+          color: 'blue',
+          fillColor: '#03f',
+          fillOpacity: 0.5
+        }).addTo(map).bindPopup(JSON.stringify(gps));
+        console.log(gps);
+      });
+    </script>
+
+  </body>
+
+</html>
+
+
+
+
