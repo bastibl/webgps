@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var gpsd = require('../node_modules/node-gpsd/lib/gpsd.js');
+var gpsd = require('node-gpsd');
 
 
 initSSE = function(res) {
@@ -43,18 +43,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/updates', function(req, res) {
   var _sse = initSSE(res);
-
-  req.once("end", function() {
-    console.log('removing sendPost from event listeners');
-    _timeline.removeListener("post", sendPost);
-  });
-
-  //function sendUpdate(string) {
-  //  console.log('timeline sse: send post');
-  //  console.log(string)
-  //  vals = string.toString('ascii').split(" ");
-  //  _sse("update", {x: parseInt(vals[0]), y: parseInt(vals[1])});
-  //}
 
   gps_listener.on('TPV', function(tpv) {
     console.log(tpv);
